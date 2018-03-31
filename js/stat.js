@@ -49,15 +49,17 @@ window.renderStatistics = function(ctx, names, times) {
   var maxTime = getMaxElement(times);
 
   for(var i = 0 ; i < names.length ; i++) {
+
     renderText(ctx, names[i], 'left', CLOUD_X + BAR_GAP + (BAR_WIDTH + BAR_GAP) * i, CLOUD_HEIGHT - CLOUD_Y - GAP);
 
     if(names[i] === 'Вы') {
       ctx.fillStyle = MY_COLOR;
     } else {
       var saturateColor  =  Math.round(Math.random() * 100);
-      ctx.fillStyle = 'hsl(240, ' + saturateColor + '%,50%)';
+      ctx.fillStyle = 'hsl(240, ' + saturateColor + '%, 50%)';
     }
 
     ctx.fillRect(CLOUD_X + BAR_GAP + (BAR_WIDTH + BAR_GAP) * i, CLOUD_HEIGHT - GAP - FONT_GAP - (BAR_HEIGHT * times[i]) / maxTime, BAR_WIDTH, (BAR_HEIGHT * times[i]) / maxTime);
+    renderText(ctx, Math.round(times[i]), 'left', CLOUD_X + BAR_GAP + (BAR_WIDTH + BAR_GAP) * i, CLOUD_HEIGHT - GAP - (FONT_GAP * 2) - (BAR_HEIGHT * times[i]) / maxTime);
   }
 }
