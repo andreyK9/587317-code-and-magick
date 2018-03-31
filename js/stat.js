@@ -39,6 +39,7 @@ var getMaxElement = function(arr) {
 };
 
 window.renderStatistics = function(ctx, names, times) {
+
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
 
@@ -53,7 +54,8 @@ window.renderStatistics = function(ctx, names, times) {
     if(names[i] === 'Вы') {
       ctx.fillStyle = MY_COLOR;
     } else {
-      ctx.fillStyle = 'hsl(240,100%,50%)';
+      var saturateColor  =  Math.round(Math.random() * 100);
+      ctx.fillStyle = 'hsl(240, ' + saturateColor + '%,50%)';
     }
 
     ctx.fillRect(CLOUD_X + BAR_GAP + (BAR_WIDTH + BAR_GAP) * i, CLOUD_HEIGHT - GAP - FONT_GAP - (BAR_HEIGHT * times[i]) / maxTime, BAR_WIDTH, (BAR_HEIGHT * times[i]) / maxTime);
