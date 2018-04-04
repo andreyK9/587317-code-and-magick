@@ -14,12 +14,6 @@ var MY_COLOR = 'rgba(255, 0, 0, 1)';
 var STEP_CUMULUS_CLOUD = 5;
 var HEIGHT_CUMULUS_CLOUD = 20;
 
-// Фуекция отрисовки облака
-var renderCloud = function (ctx, x, y, color) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
-};
-
 // Функция отрисовки текста
 var renderText = function (ctx, text, align, x, y) {
   ctx.fillStyle = TEXT_COLOR;
@@ -29,28 +23,30 @@ var renderText = function (ctx, text, align, x, y) {
   ctx.fillText(text, x, y);
 };
 
-// Функция поиска максимального елемента массива
-var getMaxElement = function (arr) {
-  var maxElement = arr[0];
+// Функция отрисовки облака статистики
+var renderCloud = function (ctx, x, y, color) {
+  ctx.fillStyle = color;
 
-  for (var i = 1; i < arr.length; i++) {
-    if (arr[i] > maxElement) {
-      maxElement = arr[i];
-    }
-  }
+  renderCumulusCloudVertical(ctx, x, y, STEP_CUMULUS_CLOUD, -BAR_GAP, color);
 
-  return maxElement;
+  renderCumulusCloudHorizontal(ctx, x, y, -HEIGHT_CUMULUS_CLOUD, color);
+
+  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+
+  renderCumulusCloudVertical(ctx, x + CLOUD_WIDTH, y, STEP_CUMULUS_CLOUD, BAR_GAP, color);
+
+  renderCumulusCloudHorizontal(ctx, x, y + CLOUD_HEIGHT, HEIGHT_CUMULUS_CLOUD, color);
 };
 
-// Функция вывода закругленного облака статистики слева и српава
-var renderCumulusCloudHeight = function (ctx, beginX, beginY, step, height, color) {
-  var stepCurrent = Math.floor(CLOUD_HEIGHT / step);
+// Функция вывода закругленного облака статистики слева и справа
+var renderCumulusCloudVertical = function (ctx, beginX, beginY, cloudStep, cloudRadius, color) {
+  var step = Math.floor(CLOUD_HEIGHT / cloudStep);
 
   ctx.beginPath();
   ctx.moveTo(beginX, beginY);
 
-  for (var i = 0; i < Math.abs(step); i++) {
-    ctx.bezierCurveTo(beginX, beginY + stepCurrent * i, beginX + height, beginY + (stepCurrent / 2) + stepCurrent * i, beginX, beginY + stepCurrent * (i + 1));
+  for (var i = 0; i < Math.abs(cloudStep); i++) {
+    ctx.quadraticCurveTo(beginX + cloudRadius, beginY + (step / 2) + step * i, beginX, beginY + step * (i + 1));
   }
 
   ctx.closePath();
@@ -59,10 +55,10 @@ var renderCumulusCloudHeight = function (ctx, beginX, beginY, step, height, colo
 };
 
 // Функция вывода закругленного облака статистики сверху и снизу
-var renderCumulusCloudWidth = function (ctx, beginX, beginY, height, color) {
+var renderCumulusCloudHorizontal = function (ctx, beginX, beginY, cloudRadius, color) {
   ctx.beginPath();
   ctx.moveTo(beginX, beginY);
-  ctx.bezierCurveTo(beginX, beginY, beginX + Math.round(CLOUD_WIDTH / 2), beginY + height, beginX + CLOUD_WIDTH, beginY);
+  ctx.quadraticCurveTo(beginX + Math.round(CLOUD_WIDTH / 2), beginY + cloudRadius, beginX + CLOUD_WIDTH, beginY);
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
@@ -71,30 +67,23 @@ var renderCumulusCloudWidth = function (ctx, beginX, beginY, height, color) {
 // Основная функция отрисовки облака статистики
 window.renderStatistics = function (ctx, names, times) {
 
-  renderCumulusCloudHeight(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, STEP_CUMULUS_CLOUD, -BAR_GAP, 'rgba(0, 0, 0, 0.7)');
-  renderCumulusCloudHeight(ctx, CLOUD_X, CLOUD_Y, STEP_CUMULUS_CLOUD, -BAR_GAP, '#fff');
-
-  renderCumulusCloudWidth(ctx, CLOUD_X, CLOUD_Y, -HEIGHT_CUMULUS_CLOUD, '#fff');
-
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
-
-  renderCumulusCloudHeight(ctx, CLOUD_X + CLOUD_WIDTH + GAP, CLOUD_Y + GAP, STEP_CUMULUS_CLOUD, BAR_GAP, 'rgba(0, 0, 0, 0.7)');
-  renderCumulusCloudHeight(ctx, CLOUD_X + CLOUD_WIDTH, CLOUD_Y, STEP_CUMULUS_CLOUD, BAR_GAP, '#fff');
-
-  renderCumulusCloudWidth(ctx, CLOUD_X + GAP, CLOUD_Y + CLOUD_HEIGHT + GAP, HEIGHT_CUMULUS_CLOUD, 'rgba(0, 0, 0, 0.7)');
-  renderCumulusCloudWidth(ctx, CLOUD_X, CLOUD_Y + CLOUD_HEIGHT, HEIGHT_CUMULUS_CLOUD, '#fff');
 
   renderText(ctx, 'Ура вы победили!', 'center', CLOUD_X + CLOUD_WIDTH / 2, CLOUD_Y + GAP);
   renderText(ctx, 'Список результатов:', 'center', CLOUD_X + CLOUD_WIDTH / 2, CLOUD_Y + FONT_GAP + GAP);
 
-  var maxTime = getMaxElement(times);
+  var maxTime = Math.max.apply(null, times);
 
   var minArrowLength = Math.min(names.length, times.length);
   names.length = times.length = minArrowLength;
 
   for (var i = 0; i < names.length; i++) {
-    renderText(ctx, names[i], 'left', CLOUD_X + BAR_GAP + (BAR_WIDTH + BAR_GAP) * i, CLOUD_HEIGHT - CLOUD_Y - GAP);
+    var currentBarHeight = (BAR_HEIGHT * times[i]) / maxTime;
+    var currentBarStep = (BAR_WIDTH + BAR_GAP) * i;
+    var beginBarPosition = CLOUD_HEIGHT - GAP - FONT_GAP;
+
+    renderText(ctx, names[i], 'left', CLOUD_X + BAR_GAP + currentBarStep, CLOUD_HEIGHT - CLOUD_Y - GAP);
 
     if (names[i] === 'Вы') {
       ctx.fillStyle = MY_COLOR;
@@ -102,10 +91,6 @@ window.renderStatistics = function (ctx, names, times) {
       var saturateControl = Math.round(Math.random() * 100);
       ctx.fillStyle = 'hsl(240, ' + saturateControl + '%, 50%)';
     }
-
-    var currentBarHeight = (BAR_HEIGHT * times[i]) / maxTime;
-    var currentBarStep = (BAR_WIDTH + BAR_GAP) * i;
-    var beginBarPosition = CLOUD_HEIGHT - GAP - FONT_GAP;
 
     ctx.fillRect(CLOUD_X + BAR_GAP + currentBarStep, beginBarPosition - currentBarHeight, BAR_WIDTH, currentBarHeight);
     renderText(ctx, Math.round(times[i]), 'left', CLOUD_X + BAR_GAP + currentBarStep, beginBarPosition - FONT_GAP - currentBarHeight);
