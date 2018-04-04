@@ -64,15 +64,7 @@ var renderCumulusCloudHorizontal = function (ctx, beginX, beginY, cloudRadius, c
   ctx.fill();
 };
 
-// Основная функция отрисовки облака статистики
-window.renderStatistics = function (ctx, names, times) {
-
-  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
-
-  renderText(ctx, 'Ура вы победили!', 'center', CLOUD_X + CLOUD_WIDTH / 2, CLOUD_Y + GAP);
-  renderText(ctx, 'Список результатов:', 'center', CLOUD_X + CLOUD_WIDTH / 2, CLOUD_Y + FONT_GAP + GAP);
-
+var renderHistograms = function (ctx, names, times) {
   var maxTime = Math.max.apply(null, times);
 
   var minArrowLength = Math.min(names.length, times.length);
@@ -95,4 +87,16 @@ window.renderStatistics = function (ctx, names, times) {
     ctx.fillRect(CLOUD_X + BAR_GAP + currentBarStep, beginBarPosition - currentBarHeight, BAR_WIDTH, currentBarHeight);
     renderText(ctx, Math.round(times[i]), 'left', CLOUD_X + BAR_GAP + currentBarStep, beginBarPosition - FONT_GAP - currentBarHeight);
   }
+};
+
+// Основная функция отрисовки облака статистики
+window.renderStatistics = function (ctx, names, times) {
+
+  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
+
+  renderText(ctx, 'Ура вы победили!', 'center', CLOUD_X + CLOUD_WIDTH / 2, CLOUD_Y + GAP);
+  renderText(ctx, 'Список результатов:', 'center', CLOUD_X + CLOUD_WIDTH / 2, CLOUD_Y + FONT_GAP + GAP);
+
+  renderHistograms(ctx, names, times);
 };
