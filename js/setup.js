@@ -7,11 +7,6 @@ var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
-// возращает случайное натуральное число в диапазоне от min до max
-var randomInteger = function (min, max) {
-  return Math.round(min - 0.5 + Math.random() * (max - min + 1));
-};
-
 // создание массива Имен и Фамилий волшебников
 var createName = function () {
   var magick = [];
@@ -40,7 +35,7 @@ var createName = function () {
   magickLastname.sort(compareRandom);
 
   for (var i = 0; i < MAGICK_LENGTH; i++) {
-    magick[i] =  magickName[i] + ' ' + magickLastname[i];
+    magick[i] = magickName[i] + ' ' + magickLastname[i];
   }
 
   return magick;
@@ -83,7 +78,7 @@ var createMagick = function () {
   var eyesColor = createEyesColor();
 
   for (var i = 0; i < MAGICK_LENGTH; i++) {
-     var magickData = {
+    var magickData = {
       name: name[i],
       coatColor: coatColor[i],
       eyesColor: eyesColor[i]
@@ -98,6 +93,7 @@ var createMagick = function () {
 // заполнение данными одного мага
 var entryMagickData = function (template, magickArr) {
   var temp = template.cloneNode(true);
+
   temp.querySelector('.setup-similar-label').textContent = magickArr.name;
   temp.querySelector('.wizard-coat').style.fill = magickArr.coatColor;
   temp.querySelector('.wizard-eyes').style.fill = magickArr.eyesColor;
@@ -128,5 +124,4 @@ document.querySelector('.setup').classList.remove('hidden');
 var magickArr = createMagick();
 var fragment = createMagickBlock(magickArr);
 renderMagickList(fragment);
-
-console.log();
+document.querySelector('.setup-similar').classList.remove('hidden');
