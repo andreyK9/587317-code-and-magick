@@ -98,6 +98,7 @@ var createMagick = function () {
 // заполнение данными одного мага
 var entryMagickData = function (template, magickArr) {
   var temp = template.cloneNode(true);
+
   temp.querySelector('.setup-similar-label').textContent = magickArr.name;
   temp.querySelector('.wizard-coat').style.fill = magickArr.coatColor;
   temp.querySelector('.wizard-eyes').style.fill = magickArr.eyesColor;
@@ -128,5 +129,4 @@ document.querySelector('.setup').classList.remove('hidden');
 var magickArr = createMagick();
 var fragment = createMagickBlock(magickArr);
 renderMagickList(fragment);
-
-console.log();
+document.querySelector('.setup-similar').classList.remove('hidden');
