@@ -68,17 +68,17 @@ var createWizardData = function () {
 
 // задает имя волшебника
 var setNameWizard = function (template, value) {
-  return template.querySelector('.setup-similar-label').textContent = value;
+  template.querySelector('.setup-similar-label').textContent = value;
 };
 
 // задает цвет мантии волшебника
 var setCoatWizard = function (template, value) {
-  return template.querySelector('.wizard-coat').style.fill = value;
+  template.querySelector('.wizard-coat').style.fill = value;
 };
 
 // задает цвет мантии волшебника
 var setEyesWizard = function (template, value) {
-  return template.querySelector('.wizard-eyes').style.fill = value;
+  template.querySelector('.wizard-eyes').style.fill = value;
 };
 
 // заполнение данными одного мага
