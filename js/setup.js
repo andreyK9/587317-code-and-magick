@@ -76,7 +76,7 @@ var setWizardCoatColor = function (template, value) {
   template.querySelector('.wizard-coat').style.fill = value;
 };
 
-// задает цвет мантии волшебника
+// задает цвет глаз волшебника
 var setWizardEyesColor = function (template, value) {
   template.querySelector('.wizard-eyes').style.fill = value;
 };
@@ -106,8 +106,8 @@ var getWizardGroup = function (wizardList) {
 
 // отрисовка всех магов
 var renderWizardGroup = function (fragment) {
-  var similarList = document.querySelector('.setup-similar-list');
-  similarList.appendChild(fragment);
+  var similar = document.querySelector('.setup-similar-list');
+  similar.appendChild(fragment);
 };
 
 var wizardData = createWizardData();
