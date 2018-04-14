@@ -4,6 +4,8 @@ var CLOUD_WIDTH = 420;
 var CLOUD_HEIGHT = 270;
 var CLOUD_X = 100;
 var CLOUD_Y = 10;
+var STEP_CUMULUS_CLOUD = 5;
+var HEIGHT_CUMULUS_CLOUD = 20;
 var GAP = 10;
 var FONT_GAP = 20;
 var BAR_HEIGHT = 150;
@@ -11,8 +13,7 @@ var BAR_WIDTH = 40;
 var BAR_GAP = 50;
 var TEXT_COLOR = '#000';
 var MY_COLOR = 'rgba(255, 0, 0, 1)';
-var STEP_CUMULUS_CLOUD = 5;
-var HEIGHT_CUMULUS_CLOUD = 20;
+
 
 // Функция отрисовки текста
 var renderText = function (ctx, text, align, x, y) {
@@ -67,8 +68,8 @@ var renderCumulusCloudHorizontal = function (ctx, beginX, beginY, cloudRadius, c
 var renderHistograms = function (ctx, names, times) {
   var maxTime = Math.max.apply(null, times);
 
-  var minArrowLength = Math.min(names.length, times.length);
-  names.length = times.length = minArrowLength;
+  times.length = Math.min(names.length, times.length);
+  names.length = times.length;
 
   for (var i = 0; i < names.length; i++) {
     var currentBarHeight = (BAR_HEIGHT * times[i]) / maxTime;
