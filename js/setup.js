@@ -1,127 +1,118 @@
 'use strict';
 
-var MAGICK_LENGTH = 4;
-
-// перемешивает массив комментариев
-var compareRandom = function () {
+var WIZARD_LENGTH = 4;
+var WIZARD_NAME = [
+  'Иван',
+  'Хуан Себастьян',
+  'Мария',
+  'Кристоф',
+  'Виктор',
+  'Юлия',
+  'Люпита',
+  'Вашингтон'
+];
+var WIZARD_LAST_NAME = [
+  'да Марья',
+  'Верон',
+  'Мирабелла',
+  'Вальц',
+  'Онопко',
+  'Топольницкая',
+  'Нионго',
+  'Ирвинг'
+];
+var WIZARD_COAT = [
+  'rgb(101, 137, 164)',
+  'rgb(241, 43, 107)',
+  'rgb(146, 100, 161)',
+  'rgb(56, 159, 117)',
+  'rgb(215, 210, 55)',
+  'rgb(0, 0, 0)'
+];
+var WIZARD_EYES = [
+  'black',
+  'red',
+  'blue',
+  'yellow',
+  'green'
+];
+// генерирует случайное число от -0.5 до 0.5
+var getCompareRandom = function () {
   return Math.random() - 0.5;
 };
 
-// создание массива Имен и Фамилий волшебников
-var createName = function () {
-  var magick = [];
-  var magickName = [
-    'Иван',
-    'Хуан Себастьян',
-    'Мария',
-    'Кристоф',
-    'Виктор',
-    'Юлия',
-    'Люпита',
-    'Вашингтон'
-  ];
-  var magickLastname = [
-    'да Марья',
-    'Верон',
-    'Мирабелла',
-    'Вальц',
-    'Онопко',
-    'Топольницкая',
-    'Нионго',
-    'Ирвинг'
-  ];
-
-  magickName.sort(compareRandom);
-  magickLastname.sort(compareRandom);
-
-  for (var i = 0; i < MAGICK_LENGTH; i++) {
-    magick[i] = magickName[i] + ' ' + magickLastname[i];
-  }
-
-  return magick;
-};
-
-// создание массива цвета мантии волшебников
-var createCoatColor = function () {
-  var magick = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
-    'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
-    'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'
-  ];
-
-  magick.sort(compareRandom);
-  return magick;
-};
-
-// создание массива цвета глаз волшебников
-var createEyesColor = function () {
-  var magick = [
-    'black',
-    'red',
-    'blue',
-    'yellow',
-    'green'
-  ];
-
-  magick.sort(compareRandom);
-  return magick;
+// возвращает волшебника
+var getWizard = function (iteration) {
+  return {
+    name: WIZARD_NAME[iteration] + WIZARD_LAST_NAME[iteration],
+    coatColor: WIZARD_COAT[iteration],
+    eyesColor: WIZARD_EYES[iteration]
+  };
 };
 
 // создание массива данных волшебников
-var createMagick = function () {
-  var magickArr = [];
-  var name = createName();
-  var coatColor = createCoatColor();
-  var eyesColor = createEyesColor();
+var createWizardData = function () {
+  var wizardGroup = [];
+  WIZARD_NAME.sort(getCompareRandom);
+  WIZARD_LAST_NAME.sort(getCompareRandom);
+  WIZARD_COAT.sort(getCompareRandom);
+  WIZARD_EYES.sort(getCompareRandom);
 
-  for (var i = 0; i < MAGICK_LENGTH; i++) {
-    var magickData = {
-      name: name[i],
-      coatColor: coatColor[i],
-      eyesColor: eyesColor[i]
-    };
-
-    magickArr.push(magickData);
+  for (var i = 0; i < WIZARD_LENGTH; i++) {
+    var wizard = getWizard(i);
+    wizardGroup.push(wizard);
   }
 
-  return magickArr;
+  return wizardGroup;
+};
+
+// задает имя волшебника
+var setNameWizard = function (template, value) {
+  return template.querySelector('.setup-similar-label').textContent = value;
+};
+
+// задает цвет мантии волшебника
+var setCoatWizard = function (template, value) {
+  return template.querySelector('.wizard-coat').style.fill = value;
+};
+
+// задает цвет мантии волшебника
+var setEyesWizard = function (template, value) {
+  return template.querySelector('.wizard-eyes').style.fill = value;
 };
 
 // заполнение данными одного мага
-var entryMagickData = function (template, magickArr) {
-  var temp = template.cloneNode(true);
+var getWizardTemplate = function (object) {
+  var template = document.querySelector('#similar-wizard-template').content.cloneNode(true);
 
-  temp.querySelector('.setup-similar-label').textContent = magickArr.name;
-  temp.querySelector('.wizard-coat').style.fill = magickArr.coatColor;
-  temp.querySelector('.wizard-eyes').style.fill = magickArr.eyesColor;
+  setNameWizard(template, object.name);
+  setCoatWizard(template, object.coatColor);
+  setEyesWizard(template, object.eyesColor);
 
-  return temp;
+  return template;
 };
 
 // создание блока волшебников
-var createMagickBlock = function (magickArr) {
+var getWizardGroup = function (wizardList) {
   var fragment = document.createDocumentFragment();
-  var template = document.querySelector('#similar-wizard-template').content;
 
-  for (var i = 0; i < MAGICK_LENGTH; i++) {
-    var magickblock = entryMagickData(template, magickArr[i]);
-    fragment.appendChild(magickblock);
+  for (var i = 0; i < WIZARD_LENGTH; i++) {
+    var template = getWizardTemplate(wizardList[i]);
+    fragment.appendChild(template);
   }
 
   return fragment;
 };
 
 // отрисовка всех магов
-var renderMagickList = function (fragment) {
+var renderWizartGroup = function (fragment) {
   var similarList = document.querySelector('.setup-similar-list');
   similarList.appendChild(fragment);
 };
 
+var wizardData = createWizardData();
+var template = getWizardGroup(wizardData);
+renderWizartGroup(template);
+
 document.querySelector('.setup').classList.remove('hidden');
-var magickArr = createMagick();
-var fragment = createMagickBlock(magickArr);
-renderMagickList(fragment);
 document.querySelector('.setup-similar').classList.remove('hidden');
