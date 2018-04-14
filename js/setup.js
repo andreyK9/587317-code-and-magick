@@ -67,17 +67,17 @@ var createWizardData = function () {
 };
 
 // задает имя волшебника
-var setNameWizard = function (template, value) {
+var setWizardName = function (template, value) {
   template.querySelector('.setup-similar-label').textContent = value;
 };
 
 // задает цвет мантии волшебника
-var setCoatWizard = function (template, value) {
+var setWizardCoatColor = function (template, value) {
   template.querySelector('.wizard-coat').style.fill = value;
 };
 
 // задает цвет мантии волшебника
-var setEyesWizard = function (template, value) {
+var setWizardEyesColor = function (template, value) {
   template.querySelector('.wizard-eyes').style.fill = value;
 };
 
@@ -85,9 +85,9 @@ var setEyesWizard = function (template, value) {
 var getWizardTemplate = function (object) {
   var template = document.querySelector('#similar-wizard-template').content.cloneNode(true);
 
-  setNameWizard(template, object.name);
-  setCoatWizard(template, object.coatColor);
-  setEyesWizard(template, object.eyesColor);
+  setWizardName(template, object.name);
+  setWizardCoatColor(template, object.coatColor);
+  setWizardEyesColor(template, object.eyesColor);
 
   return template;
 };
@@ -105,14 +105,14 @@ var getWizardGroup = function (wizardList) {
 };
 
 // отрисовка всех магов
-var renderWizartGroup = function (fragment) {
+var renderWizardGroup = function (fragment) {
   var similarList = document.querySelector('.setup-similar-list');
   similarList.appendChild(fragment);
 };
 
 var wizardData = createWizardData();
 var template = getWizardGroup(wizardData);
-renderWizartGroup(template);
+renderWizardGroup(template);
 
 document.querySelector('.setup').classList.remove('hidden');
 document.querySelector('.setup-similar').classList.remove('hidden');
