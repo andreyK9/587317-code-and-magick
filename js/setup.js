@@ -43,6 +43,8 @@ var setupOpen = document.querySelector('.setup-open');
 var setupClose = setup.querySelector('.setup-close');
 var setupUserName = setup.querySelector('.setup-user-name');
 var setupSubmit = setup.querySelector('.setup-submit');
+var setupWizardEyes = setup.querySelector('.wizard-eyes');
+
 
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
@@ -66,6 +68,25 @@ var onUserNameEscPress = function (evt) {
     }
   }
 
+var onUserEyesColorChange = function (evt) {
+  var eyes = setupWizardEyes;
+  if(!eyes.style.fill) eyes.style.fill = 'black';
+  eyes.style.fill = changeUserEyesColor(evt);
+};
+
+var changeUserEyesColor = function (evt) {
+  for (var i = 0; i < WIZARD_EYES.length; i++) {
+    if(WIZARD_EYES[i] === evt.target.style.fill) {
+      if(i === WIZARD_EYES.length - 1) {
+        i = 0;
+      }
+      return WIZARD_EYES[++i];
+    }
+  }
+  return;
+};
+
+
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
@@ -80,6 +101,7 @@ var openPopup = function () {
   setupClose.addEventListener('keydown', onPopupEnterPress);
   setupUserName.addEventListener('keydown', onUserNameEscPress);
   document.addEventListener('keydown', onPopupEscPress);
+  setupWizardEyes.addEventListener('click', onUserEyesColorChange);
 };
 
 setupOpen.addEventListener('click', function () {
