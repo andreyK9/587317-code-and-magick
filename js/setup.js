@@ -1,6 +1,8 @@
 'use strict';
 
 var WIZARD_LENGTH = 4;
+var ESC_CODE = 27;
+var ENTER_CODE = 13;
 var WIZARD_NAME = [
   'Иван',
   'Хуан Себастьян',
@@ -36,6 +38,62 @@ var WIZARD_EYES = [
   'yellow',
   'green'
 ];
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var setupUserName = setup.querySelector('.setup-user-name');
+var setupSubmit = setup.querySelector('.setup-submit');
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    closePopup();
+  }
+};
+
+var onPopupClickPress =  function () {
+    closePopup();
+};
+
+var onPopupEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_CODE) {
+    closePopup();
+  }
+};
+
+var onUserNameEscPress = function (evt) {
+    if(evt.keyCode === ESC_CODE) {
+      evt.stopPropagation();
+    }
+  }
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+  setupClose.removeEventListener('click', onPopupClickPress);
+  setupClose.removeEventListener('keydown', onPopupEnterPress);
+  setupUserName.removeEventListener('keydown', onUserNameEscPress);
+};
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  setupClose.addEventListener('click', onPopupClickPress);
+  setupClose.addEventListener('keydown', onPopupEnterPress);
+  setupUserName.addEventListener('keydown', onUserNameEscPress);
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if(evt.keyCode === ENTER_CODE) {
+    openPopup();
+  }
+});
+
+
+
 // генерирует случайное число от -0.5 до 0.5
 var getCompareRandom = function () {
   return Math.random() - 0.5;
@@ -113,6 +171,3 @@ var renderWizardGroup = function (fragment) {
 var wizardData = createWizardData();
 var template = getWizardGroup(wizardData);
 renderWizardGroup(template);
-
-document.querySelector('.setup').classList.remove('hidden');
-document.querySelector('.setup-similar').classList.remove('hidden');
