@@ -63,28 +63,33 @@ var wizardCoat = setup.querySelector('.wizard-coat');
 var fireball = setup.querySelector('.setup-fireball-wrap');
 var player = setup.querySelector('.setup-player');
 
+// закрытие окна по клавише Esc
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
     closePopup();
   }
 };
 
+// закрытие окна при клике мышм
 var onPopupClickPress =  function () {
     closePopup();
 };
 
+// закрытие окна по клавише Enter при наведенном фокусе
 var onPopupEnterPress = function (evt) {
   if (evt.keyCode === ENTER_CODE) {
     closePopup();
   }
 };
 
+// отмена закрытия окна при выбранном поле "имя персонажа"
 var onUserNameEscPress = function (evt) {
-    if(evt.keyCode === ESC_CODE) {
-      evt.stopPropagation();
-    }
+  if(evt.keyCode === ESC_CODE) {
+    evt.stopPropagation();
   }
+};
 
+// смена цвета глаз персонажа
 var onUserEyesColorChange = function () {
   var color = wizardEyes.style.fill;
   if(!color) {
@@ -93,11 +98,13 @@ var onUserEyesColorChange = function () {
   setEyesColor(color);
 };
 
+// смена цвета мантии персонажа
 var onUserCoatColorChange = function () {
   var color = wizardCoat.style.fill;
   setCoatColor(color);
 };
 
+// смена цвета фаерболла
 var onFireballColorChange = function () {
   var color = fireball.style.backgroundColor;
   if(!color) {
@@ -106,24 +113,28 @@ var onFireballColorChange = function () {
   setFireballColor(color);
 };
 
+// установка цвета фаерболла
 var setFireballColor = function (value) {
   var result = fireballConvert[stepUp(value, FIREBALL_COLOR)];
   fireball.style.background = result;
   player.querySelector('input[name=fireball-color]').value = result;
 };
 
+// установка цвета мантии персонажа
 var setCoatColor = function (value) {
   var result = stepUp(value, WIZARD_COAT);
   wizardCoat.style.fill = result;
   player.querySelector('input[name=coat-color]').value = result;
 }
 
+// установка цвета глаз персонажа
 var setEyesColor = function (value) {
   var result = stepUp(value, WIZARD_EYES);
   wizardEyes.style.fill = result;
   player.querySelector('input[name=eyes-color]').value = result;
 }
 
+// выбирает новый цвет
 var stepUp = function (currentColor, arrColor) {
   for (var i = 0; i < arrColor.length; i++) {
     if(arrColor[i] === currentColor) {
@@ -136,6 +147,7 @@ var stepUp = function (currentColor, arrColor) {
   return;
 };
 
+// закрывает окно настройки персонажа
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
@@ -147,6 +159,7 @@ var closePopup = function () {
   fireball.removeEventListener('click', onFireballColorChange);
 };
 
+// открывает окно настройки персонажа
 var openPopup = function () {
   setup.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
@@ -167,8 +180,6 @@ setupOpen.addEventListener('keydown', function (evt) {
     openPopup();
   }
 });
-
-
 
 // генерирует случайное число от -0.5 до 0.5
 var getCompareRandom = function () {
