@@ -86,34 +86,43 @@ var onUserNameEscPress = function (evt) {
   }
 
 var onUserEyesColorChange = function () {
-  var eyes = wizardEyes.style.fill;
-  if(!eyes) {
-    eyes = 'black';
+  var color = wizardEyes.style.fill;
+  if(!color) {
+    color = 'black';
   }
-  var result = stepUp(eyes, WIZARD_EYES);
-  wizardEyes.style.fill = result;
-  player.querySelector('input[name=eyes-color]').value = result;
+  setEyesColor(color);
 };
 
 var onUserCoatColorChange = function () {
-  var coat = wizardCoat.style.fill;
-  if(!coat) {
-    coat = 'black';
-  }
-  var result = stepUp(coat, WIZARD_COAT);
-  wizardCoat.style.fill = result;
-  player.querySelector('input[name=coat-color]').value = result;
+  var color = wizardCoat.style.fill;
+  setCoatColor(color);
 };
 
 var onFireballColorChange = function () {
-  var fball = fireball.style.backgroundColor;
-  if(!fball) {
-    fball = FIREBALL_DEFAULT_COLOR;
+  var color = fireball.style.backgroundColor;
+  if(!color) {
+    color = FIREBALL_DEFAULT_COLOR;
   }
-  var result = fireballConvert[stepUp(fball, FIREBALL_COLOR)];
+  setFireballColor(color);
+};
+
+var setFireballColor = function (value) {
+  var result = fireballConvert[stepUp(value, FIREBALL_COLOR)];
   fireball.style.background = result;
   player.querySelector('input[name=fireball-color]').value = result;
 };
+
+var setCoatColor = function (value) {
+  var result = stepUp(value, WIZARD_COAT);
+  wizardCoat.style.fill = result;
+  player.querySelector('input[name=coat-color]').value = result;
+}
+
+var setEyesColor = function (value) {
+  var result = stepUp(value, WIZARD_EYES);
+  wizardEyes.style.fill = result;
+  player.querySelector('input[name=eyes-color]').value = result;
+}
 
 var stepUp = function (currentColor, arrColor) {
   for (var i = 0; i < arrColor.length; i++) {
