@@ -3,6 +3,7 @@
 var WIZARD_LENGTH = 4;
 var ESC_CODE = 27;
 var ENTER_CODE = 13;
+var FIREBALL_DEFAULT_COLOR = 'rgb(238, 72, 48)';
 var WIZARD_NAME = [
   'Иван',
   'Хуан Себастьян',
@@ -38,13 +39,29 @@ var WIZARD_EYES = [
   'yellow',
   'green'
 ];
+var fireballConvert = {
+  'rgb(238, 72, 48)' : '#ee4830',
+  'rgb(48, 168, 238)': '#30a8ee',
+  'rgb(92, 230, 192)': '#5ce6c0',
+  'rgb(232, 72, 213)': '#e848d5',
+  'rgb(230, 232, 72)': '#e6e848'
+};
+var FIREBALL_COLOR = [
+  'rgb(238, 72, 48)',
+  'rgb(48, 168, 238)',
+  'rgb(92, 230, 192)',
+  'rgb(232, 72, 213)',
+  'rgb(230, 232, 72)'
+];
 var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = setup.querySelector('.setup-close');
-var setupUserName = setup.querySelector('.setup-user-name');
 var setupSubmit = setup.querySelector('.setup-submit');
-var setupWizardEyes = setup.querySelector('.wizard-eyes');
-
+var userName = setup.querySelector('.setup-user-name');
+var wizardEyes = setup.querySelector('.wizard-eyes');
+var wizardCoat = setup.querySelector('.wizard-coat');
+var fireball = setup.querySelector('.setup-fireball-wrap');
+var player = setup.querySelector('.setup-player');
 
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
@@ -68,40 +85,68 @@ var onUserNameEscPress = function (evt) {
     }
   }
 
-var onUserEyesColorChange = function (evt) {
-  var eyes = setupWizardEyes;
-  if(!eyes.style.fill) eyes.style.fill = 'black';
-  eyes.style.fill = changeUserEyesColor(evt);
+var onUserEyesColorChange = function () {
+  var eyes = wizardEyes.style.fill;
+  if(!eyes) {
+    eyes = 'black';
+  }
+  var result = stepUp(eyes, WIZARD_EYES);
+  wizardEyes.style.fill = result;
+  player.querySelector('input[name=eyes-color]').value = result;
 };
 
-var changeUserEyesColor = function (evt) {
-  for (var i = 0; i < WIZARD_EYES.length; i++) {
-    if(WIZARD_EYES[i] === evt.target.style.fill) {
-      if(i === WIZARD_EYES.length - 1) {
-        i = 0;
+var onUserCoatColorChange = function () {
+  var coat = wizardCoat.style.fill;
+  if(!coat) {
+    coat = 'black';
+  }
+  var result = stepUp(coat, WIZARD_COAT);
+  wizardCoat.style.fill = result;
+  player.querySelector('input[name=coat-color]').value = result;
+};
+
+var onFireballColorChange = function () {
+  var fball = fireball.style.backgroundColor;
+  if(!fball) {
+    fball = FIREBALL_DEFAULT_COLOR;
+  }
+  var result = fireballConvert[stepUp(fball, FIREBALL_COLOR)];
+  fireball.style.background = result;
+  player.querySelector('input[name=fireball-color]').value = result;
+};
+
+var stepUp = function (currentColor, arrColor) {
+  for (var i = 0; i < arrColor.length; i++) {
+    if(arrColor[i] === currentColor) {
+      if(i === arrColor.length - 1) {
+        return arrColor[0];
       }
-      return WIZARD_EYES[++i];
+      return arrColor[++i];
     }
   }
   return;
 };
-
 
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   setupClose.removeEventListener('click', onPopupClickPress);
   setupClose.removeEventListener('keydown', onPopupEnterPress);
-  setupUserName.removeEventListener('keydown', onUserNameEscPress);
+  userName.removeEventListener('keydown', onUserNameEscPress);
+  wizardEyes.removeEventListener('click', onUserEyesColorChange);
+  wizardCoat.removeEventListener('click', onUserCoatColorChange);
+  fireball.removeEventListener('click', onFireballColorChange);
 };
 
 var openPopup = function () {
   setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
   setupClose.addEventListener('click', onPopupClickPress);
   setupClose.addEventListener('keydown', onPopupEnterPress);
-  setupUserName.addEventListener('keydown', onUserNameEscPress);
-  document.addEventListener('keydown', onPopupEscPress);
-  setupWizardEyes.addEventListener('click', onUserEyesColorChange);
+  userName.addEventListener('keydown', onUserNameEscPress);
+  wizardEyes.addEventListener('click', onUserEyesColorChange);
+  wizardCoat.addEventListener('click', onUserCoatColorChange);
+  fireball.addEventListener('click', onFireballColorChange);
 };
 
 setupOpen.addEventListener('click', function () {
