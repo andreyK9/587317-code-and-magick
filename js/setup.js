@@ -1,6 +1,9 @@
 'use strict';
 
 var WIZARD_LENGTH = 4;
+var ESC_CODE = 27;
+var ENTER_CODE = 13;
+var FIREBALL_DEFAULT_COLOR = 'rgb(238, 72, 48)';
 var WIZARD_NAME = [
   'Иван',
   'Хуан Себастьян',
@@ -36,6 +39,154 @@ var WIZARD_EYES = [
   'yellow',
   'green'
 ];
+var fireballConvert = {
+  'rgb(238, 72, 48)': '#ee4830',
+  'rgb(48, 168, 238)': '#30a8ee',
+  'rgb(92, 230, 192)': '#5ce6c0',
+  'rgb(232, 72, 213)': '#e848d5',
+  'rgb(230, 232, 72)': '#e6e848'
+};
+var FIREBALL_COLOR = [
+  'rgb(238, 72, 48)',
+  'rgb(48, 168, 238)',
+  'rgb(92, 230, 192)',
+  'rgb(232, 72, 213)',
+  'rgb(230, 232, 72)'
+];
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open img');
+var setupClose = setup.querySelector('.setup-close');
+var userName = setup.querySelector('.setup-user-name');
+var wizardEyes = setup.querySelector('.wizard-eyes');
+var wizardCoat = setup.querySelector('.wizard-coat');
+var fireball = setup.querySelector('.setup-fireball');
+var player = setup.querySelector('.setup-player');
+
+// закрытие окна при клике мыши
+var onPopupClickPress = function (evt) {
+  if (evt.type === 'click') {
+    closePopup();
+  }
+};
+
+// закрытие окна по клавише Enter при наведенном фокусе
+var onPopupEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_CODE) {
+    closePopup();
+  }
+};
+
+// отмена закрытия окна при выбранном поле "имя персонажа"
+var onUserNameEscPress = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    evt.stopPropagation();
+  }
+};
+
+// смена цвета глаз персонажа
+var onUserEyesClick = function () {
+  var color = wizardEyes.style.fill;
+  if (!color) {
+    color = 'black';
+  }
+  setEyesColor(color);
+};
+
+// смена цвета мантии персонажа
+var onUserCoatClick = function () {
+  var color = wizardCoat.style.fill;
+  setCoatColor(color);
+};
+
+// смена цвета фаерболла
+var onFireballClick = function (evt) {
+  var color = evt.target.parentElement.style.backgroundColor;
+  if (!color) {
+    color = FIREBALL_DEFAULT_COLOR;
+  }
+  setFireballColor(evt.target.parentElement, color);
+};
+
+// установка цвета фаерболла
+var setFireballColor = function (target, value) {
+  var result = fireballConvert[getNextElement(value, FIREBALL_COLOR)];
+  target.style.background = result;
+  player.querySelector('input[name=fireball-color]').value = result;
+};
+
+// установка цвета мантии персонажа
+var setCoatColor = function (value) {
+  var result = getNextElement(value, WIZARD_COAT);
+  wizardCoat.style.fill = result;
+  player.querySelector('input[name=coat-color]').value = result;
+};
+
+// установка цвета глаз персонажа
+var setEyesColor = function (value) {
+  var result = getNextElement(value, WIZARD_EYES);
+  wizardEyes.style.fill = result;
+  player.querySelector('input[name=eyes-color]').value = result;
+};
+
+// выбирает новый цвет
+var getNextElement = function (current, arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] === current) {
+      if (i === arr.length - 1) {
+        return arr[0];
+      }
+      return arr[++i];
+    }
+  }
+  return arr[0];
+};
+
+// закрывает окно настройки персонажа
+var closePopup = function () {
+  setup.classList.add('hidden');
+};
+
+// открывает окно настройки персонажа
+var openPopup = function (evt) {
+
+  if (evt.keyCode === ESC_CODE) {
+    closePopup();
+  }
+
+  switch (evt.target) {
+    case setupOpen:
+      setup.classList.remove('hidden');
+      break;
+    case setupClose:
+      if (evt.type === 'click') {
+        onPopupClickPress(evt);
+      } else {
+        onPopupEnterPress(evt);
+      }
+      break;
+    case userName:
+      onUserNameEscPress(evt);
+      break;
+    case wizardEyes:
+      onUserEyesClick(evt);
+      break;
+    case wizardCoat:
+      onUserCoatClick(evt);
+      break;
+    case fireball:
+      onFireballClick(evt);
+      break;
+  }
+};
+
+document.addEventListener('click', function (evt) {
+  openPopup(evt);
+});
+
+document.addEventListener('keydown', function (evt) {
+  openPopup(evt);
+});
+
 // генерирует случайное число от -0.5 до 0.5
 var getCompareRandom = function () {
   return Math.random() - 0.5;
@@ -113,6 +264,3 @@ var renderWizardGroup = function (fragment) {
 var wizardData = createWizardData();
 var template = getWizardGroup(wizardData);
 renderWizardGroup(template);
-
-document.querySelector('.setup').classList.remove('hidden');
-document.querySelector('.setup-similar').classList.remove('hidden');
