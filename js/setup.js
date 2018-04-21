@@ -54,24 +54,19 @@ var FIREBALL_COLOR = [
   'rgb(230, 232, 72)'
 ];
 var setup = document.querySelector('.setup');
-var setupOpen = document.querySelector('.setup-open');
+var setupOpen = document.querySelector('.setup-open img');
 var setupClose = setup.querySelector('.setup-close');
 var userName = setup.querySelector('.setup-user-name');
 var wizardEyes = setup.querySelector('.wizard-eyes');
 var wizardCoat = setup.querySelector('.wizard-coat');
-var fireball = setup.querySelector('.setup-fireball-wrap');
+var fireball = setup.querySelector('.setup-fireball');
 var player = setup.querySelector('.setup-player');
 
-// закрытие окна по клавише Esc
-var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_CODE) {
+// закрытие окна при клике мыши
+var onPopupClickPress = function (evt) {
+  if (evt.type === 'click') {
     closePopup();
   }
-};
-
-// закрытие окна при клике мыши
-var onPopupClickPress = function () {
-  closePopup();
 };
 
 // закрытие окна по клавише Enter при наведенном фокусе
@@ -89,7 +84,7 @@ var onUserNameEscPress = function (evt) {
 };
 
 // смена цвета глаз персонажа
-var onUserEyesColorChange = function () {
+var onUserEyesClick = function () {
   var color = wizardEyes.style.fill;
   if (!color) {
     color = 'black';
@@ -98,24 +93,24 @@ var onUserEyesColorChange = function () {
 };
 
 // смена цвета мантии персонажа
-var onUserCoatColorChange = function () {
+var onUserCoatClick = function () {
   var color = wizardCoat.style.fill;
   setCoatColor(color);
 };
 
 // смена цвета фаерболла
-var onFireballColorChange = function () {
-  var color = fireball.style.backgroundColor;
+var onFireballClick = function (evt) {
+  var color = evt.target.parentElement.style.backgroundColor;
   if (!color) {
     color = FIREBALL_DEFAULT_COLOR;
   }
-  setFireballColor(color);
+  setFireballColor(evt.target.parentElement, color);
 };
 
 // установка цвета фаерболла
-var setFireballColor = function (value) {
+var setFireballColor = function (target, value) {
   var result = fireballConvert[getNextElement(value, FIREBALL_COLOR)];
-  fireball.style.background = result;
+  target.style.background = result;
   player.querySelector('input[name=fireball-color]').value = result;
 };
 
@@ -149,35 +144,47 @@ var getNextElement = function (current, arr) {
 // закрывает окно настройки персонажа
 var closePopup = function () {
   setup.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
-  setupClose.removeEventListener('click', onPopupClickPress);
-  setupClose.removeEventListener('keydown', onPopupEnterPress);
-  userName.removeEventListener('keydown', onUserNameEscPress);
-  wizardEyes.removeEventListener('click', onUserEyesColorChange);
-  wizardCoat.removeEventListener('click', onUserCoatColorChange);
-  fireball.removeEventListener('click', onFireballColorChange);
 };
 
 // открывает окно настройки персонажа
-var openPopup = function () {
-  setup.classList.remove('hidden');
-  document.addEventListener('keydown', onPopupEscPress);
-  setupClose.addEventListener('click', onPopupClickPress);
-  setupClose.addEventListener('keydown', onPopupEnterPress);
-  userName.addEventListener('keydown', onUserNameEscPress);
-  wizardEyes.addEventListener('click', onUserEyesColorChange);
-  wizardCoat.addEventListener('click', onUserCoatColorChange);
-  fireball.addEventListener('click', onFireballColorChange);
+var openPopup = function (evt) {
+
+  if (evt.keyCode === ESC_CODE) {
+    closePopup();
+  }
+
+  switch (evt.target) {
+    case setupOpen:
+      setup.classList.remove('hidden');
+      break;
+    case setupClose:
+      if (evt.type === 'click') {
+        onPopupClickPress(evt);
+      } else {
+        onPopupEnterPress(evt);
+      }
+      break;
+    case userName:
+      onUserNameEscPress(evt);
+      break;
+    case wizardEyes:
+      onUserEyesClick(evt);
+      break;
+    case wizardCoat:
+      onUserCoatClick(evt);
+      break;
+    case fireball:
+      onFireballClick(evt);
+      break;
+  }
 };
 
-setupOpen.addEventListener('click', function () {
-  openPopup();
+document.addEventListener('click', function (evt) {
+  openPopup(evt);
 });
 
-setupOpen.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_CODE) {
-    openPopup();
-  }
+document.addEventListener('keydown', function (evt) {
+  openPopup(evt);
 });
 
 // генерирует случайное число от -0.5 до 0.5
