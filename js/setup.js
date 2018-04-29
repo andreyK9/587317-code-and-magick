@@ -62,6 +62,7 @@ var wizardCoat = setup.querySelector('.wizard-coat');
 var fireball = setup.querySelector('.setup-fireball');
 var player = setup.querySelector('.setup-player');
 
+
 // закрытие окна при клике мыши
 var onPopupClickPress = function (evt) {
   if (evt.type === 'click') {
@@ -179,14 +180,6 @@ var openPopup = function (evt) {
   }
 };
 
-document.addEventListener('click', function (evt) {
-  openPopup(evt);
-});
-
-document.addEventListener('keydown', function (evt) {
-  openPopup(evt);
-});
-
 // генерирует случайное число от -0.5 до 0.5
 var getCompareRandom = function () {
   return Math.random() - 0.5;
@@ -264,3 +257,11 @@ var renderWizardGroup = function (fragment) {
 var wizardData = createWizardData();
 var template = getWizardGroup(wizardData);
 renderWizardGroup(template);
+
+document.addEventListener('click', function (evt) {
+  openPopup(evt);
+});
+
+document.addEventListener('keydown', function (evt) {
+  openPopup(evt);
+});
