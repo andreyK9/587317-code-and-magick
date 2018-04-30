@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   var setup = document.querySelector('.setup');
-  var dialogHandle = setup.querySelector('.setup-user-pic');
+  var dialogHandle = setup.querySelector('.setup-user-pic + input');
   dialogHandle.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -10,7 +10,16 @@
       y: evt.clientY
     };
 
+    var onInputPreventDefault = function (upEvt) {
+      upEvt.preventDefault();
+      dialogHandle.removeEventListener('click', onInputPreventDefault);
+    };
+
     var onMouseMove = function (moveEvt) {
+      if (!moveEvt.defaultPrevented) {
+        dialogHandle.addEventListener('click', onInputPreventDefault);
+      }
+
       moveEvt.preventDefault();
 
       var shift = {
