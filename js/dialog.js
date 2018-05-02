@@ -3,12 +3,12 @@
   var setup = document.querySelector('.setup');
   var dialogHandle = setup.querySelector('.setup-user-pic + input');
   dialogHandle.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
+    var islistenerInclude = false;
+    var changeCoord = startCoords.x + startCoords.y;
 
     var onInputPreventDefault = function (upEvt) {
       upEvt.preventDefault();
@@ -16,11 +16,11 @@
     };
 
     var onMouseMove = function (moveEvt) {
-      if (!moveEvt.defaultPrevented) {
+      var currentCoord = startCoords.x + startCoords.y;
+      if (!islistenerInclude && changeCoord !== currentCoord) {
+        islistenerInclude = true;
         dialogHandle.addEventListener('click', onInputPreventDefault);
       }
-
-      moveEvt.preventDefault();
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -37,13 +37,12 @@
     };
 
     var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('click', onMouseUp);
     };
 
     document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('click', onMouseUp);
   });
 })();
