@@ -36,8 +36,7 @@
       setup.style.left = (setup.offsetLeft - shift.x) + 'px';
     };
 
-    var onMouseUp = function (upEvt) {
-
+    var onMouseUp = function () {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('click', onMouseUp);
     };
