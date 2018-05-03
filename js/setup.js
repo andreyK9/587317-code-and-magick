@@ -6,4 +6,5 @@
 
   window.dialog.addPopupListener();
   window.dialog.addMoveListener();
+
 })();

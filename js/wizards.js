@@ -42,7 +42,6 @@
     renderWizardGroup: function (fragment) {
       var similarList = document.querySelector('.setup-similar-list');
       similarList.appendChild(fragment);
-      similar.classList.remove('hidden');
     }
   };
 })();
