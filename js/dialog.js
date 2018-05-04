@@ -53,7 +53,7 @@
   var onFormSubmitTouch = function (evt) {
     window.backend.save(new FormData(form), function () {
       setup.classList.add('hidden');
-    }, window.wizard.errorMessage);
+    }, window.backend.errorMessage);
     evt.preventDefault();
   };
 
