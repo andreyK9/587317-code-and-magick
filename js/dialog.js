@@ -3,6 +3,7 @@
   var code = {ESC: 27, ENTER: 13};
   var setup = document.querySelector('.setup');
   var setupOpen = document.querySelector('.setup-open img');
+  var form = setup.querySelector('.setup-wizard-form');
   var setupClose = setup.querySelector('.setup-close');
   var userName = setup.querySelector('.setup-user-name');
   var wizardEyes = setup.querySelector('.wizard-eyes');
@@ -47,6 +48,13 @@
       color = window.data.fireball.DEFAULT_COLOR;
     }
     setFireballColor(evt.target.parentElement, color);
+  };
+
+  var onFormSubmitTouch = function (evt) {
+    window.backend.save(new FormData(form), function () {
+      setup.classList.add('hidden');
+    }, window.wizard.errorMessage);
+    evt.preventDefault();
   };
 
   // установка цвета фаерболла
@@ -121,7 +129,6 @@
     }
   };
 
-
   window.dialog = {
     addMoveListener: function () {
       dialogHandle.addEventListener('mousedown', function (evt) {
@@ -174,6 +181,7 @@
       document.addEventListener('keydown', function (evt) {
         openPopup(evt);
       });
+      form.addEventListener('submit', onFormSubmitTouch);
     }
   };
 
