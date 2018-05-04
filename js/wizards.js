@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var similar = document.querySelector('.setup-similar');
+  var similarList = document.querySelector('.setup-similar-list');
 
   // задает имя волшебника
   var setWizardName = function (template, value) {
@@ -18,31 +19,31 @@
   };
 
   // заполнение данными одного мага
-  var getWizardTemplate = function (object) {
+  var getWizardTemplate = function (wizard) {
     var template = document.querySelector('#similar-wizard-template').content.cloneNode(true);
 
-    setWizardName(template, object.name);
-    setWizardCoatColor(template, object.coatColor);
-    setWizardEyesColor(template, object.eyesColor);
+    setWizardName(template, wizard.name);
+    setWizardCoatColor(template, wizard.colorCoat);
+    setWizardEyesColor(template, wizard.colorEyes);
 
     return template;
   };
 
+  var successResponse = function (wizardList) {
+    var fragment = document.createDocumentFragment();
+    wizardList.sort(window.data.getCompareRandom);
+
+    for (var i = 0; i < window.data.WIZARD_LENGTH; i++) {
+      var template = getWizardTemplate(wizardList[i]);
+      fragment.appendChild(template);
+    }
+    similarList.appendChild(fragment);
+    similar.classList.remove('hidden');
+  };
+
   window.wizard = {
-    getWizardGroup: function (wizardList) {
-      var fragment = document.createDocumentFragment();
-
-      for (var i = 0; i < window.data.WIZARD_LENGTH; i++) {
-        var template = getWizardTemplate(wizardList[i]);
-        fragment.appendChild(template);
-      }
-
-      return fragment;
-    },
-    renderWizardGroup: function (fragment) {
-      var similarList = document.querySelector('.setup-similar-list');
-      similarList.appendChild(fragment);
-      similar.classList.remove('hidden');
+    renderWizarGroup: function () {
+      window.backend.load(successResponse, window.backend.errorMessage);
     }
   };
 })();

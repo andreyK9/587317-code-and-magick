@@ -1,11 +1,6 @@
 'use strict';
 (function () {
 
-  // генерирует случайное число от -0.5 до 0.5
-  var getCompareRandom = function () {
-    return Math.random() - 0.5;
-  };
-
   // возвращает волшебника
   var getWizard = function (iteration) {
     return {
@@ -74,10 +69,10 @@
     },
     createWizardData: function () {
       var wizardGroup = [];
-      window.data.wizard.NAME.sort(getCompareRandom);
-      window.data.wizard.LAST_NAME.sort(getCompareRandom);
-      window.data.wizard.COAT.sort(getCompareRandom);
-      window.data.wizard.EYES.sort(getCompareRandom);
+      window.data.wizard.NAME.sort(window.data.getCompareRandom);
+      window.data.wizard.LAST_NAME.sort(window.data.getCompareRandom);
+      window.data.wizard.COAT.sort(window.data.getCompareRandom);
+      window.data.wizard.EYES.sort(window.data.getCompareRandom);
 
       for (var i = 0; i < window.data.WIZARD_LENGTH; i++) {
         var wizard = getWizard(i);
@@ -85,6 +80,9 @@
       }
 
       return wizardGroup;
+    },
+    getCompareRandom: function () {
+      return Math.random() - 0.5;
     }
   };
 })();
