@@ -29,21 +29,16 @@
     return template;
   };
 
-  var successResponse = function (wizardList) {
+  window.render = function (wizardList) {
     var fragment = document.createDocumentFragment();
-    wizardList.sort(window.data.getCompareRandom);
+    similarList.innerHTML = '';
+    var takeNumber = wizardList.length > window.data.WIZARD_LENGTH ? window.data.WIZARD_LENGTH : wizardList.length;
 
-    for (var i = 0; i < window.data.WIZARD_LENGTH; i++) {
+    for (var i = 0; i < takeNumber; i++) {
       var template = getWizardTemplate(wizardList[i]);
       fragment.appendChild(template);
     }
     similarList.appendChild(fragment);
     similar.classList.remove('hidden');
-  };
-
-  window.wizard = {
-    renderWizarGroup: function () {
-      window.backend.load(successResponse, window.backend.errorMessage);
-    }
   };
 })();

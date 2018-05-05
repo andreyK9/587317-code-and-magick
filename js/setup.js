@@ -1,7 +1,6 @@
 'use strict';
 (function () {
-  window.wizard.renderWizarGroup();
+  window.similar.renderWizarGroup();
   window.dialog.addPopupListener();
   window.dialog.addMoveListener();
-
 })();
