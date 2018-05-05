@@ -5,9 +5,9 @@
   var wizardEyes = setup.querySelector('.wizard-eyes');
   var wizardCoat = setup.querySelector('.wizard-coat');
   var wizard = {
-    onEyesChange: function (color) {},
-    onCoatChange: function (color) {}
-  }
+    onEyesChange: function () {},
+    onCoatChange: function () {}
+  };
   // выбирает новый цвет
   var getNextElement = function (current, arr) {
     for (var i = 0; i < arr.length; i++) {

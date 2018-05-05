@@ -1,7 +1,6 @@
 'use strict';
 (function () {
   var wizards = [];
-  var lastTimeout;
   var coatColor = 'rgb(101, 137, 164)';
   var eyesColor = 'black';
 
@@ -38,15 +37,15 @@
     }));
   };
 
-  window.wizard.user.onEyesChange = function (color) {
+  window.wizard.user.onEyesChange = window.debounce(function (color) {
     eyesColor = color;
-    window.debounce(updateWizards);
-  }
+    updateWizards();
+  });
 
-  window.wizard.user.onCoatChange = function (color) {
+  window.wizard.user.onCoatChange = window.debounce(function (color) {
     coatColor = color;
-    window.debounce(updateWizards);
-  }
+    updateWizards();
+  });
 
   var successResponse = function (data) {
     wizards = data;
@@ -57,5 +56,5 @@
     renderWizarGroup: function () {
       window.backend.load(successResponse, window.backend.errorMessage);
     }
-  }
-})()
+  };
+})();
